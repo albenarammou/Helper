@@ -9,6 +9,7 @@ namespace Helper.Services
         Task<int> SaveItemAsync(T item);
         Task<int> DeleteItemAsync(T item);
         Task<T> GetItemAsync(int id);
+        Task<List<T>> GetItemsAsync();
         Task<List<T>> GetItemsNotDoneAsync();
     }
 }

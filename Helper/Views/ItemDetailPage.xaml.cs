@@ -5,6 +5,7 @@ using Xamarin.Forms.Xaml;
 
 using Helper.Models;
 using Helper.ViewModels;
+using Helper.Services;
 
 namespace Helper.Views
 {
@@ -20,24 +21,25 @@ namespace Helper.Views
         {
             InitializeComponent();
             BindingContext = this.viewModel = viewModel;
-            Item = viewModel.Item;//me
+            Item = viewModel.Item;  //me
 
         }
 
         async void Save_Clicked(object sender, EventArgs e)
         {
             MessagingCenter.Send(this, "AddItem", Item);
-            await Navigation.PopModalAsync();
+            await Navigation.PopAsync();
         }
         async void Delete_Clicked(object sender, EventArgs e)
         {
             MessagingCenter.Send(this, "DeleteItem", Item);
-            await Navigation.PopModalAsync();
+            await Navigation.PopAsync();
+            //await Navigation.PushAsync(new NavigationPage(new NewItemPage()));
         }
 
         async void Cancel_Clicked(object sender, EventArgs e)
         {
-            await Navigation.PopModalAsync();
+            await Navigation.PopAsync();
         }
 
 

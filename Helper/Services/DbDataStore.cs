@@ -35,7 +35,6 @@ namespace Helper.Services
             return Database.Table<Item>().Where(i => i.Id == id).FirstOrDefaultAsync();
         }
 
-
         public Task<int> SaveItemAsync(Item item)
         {
             return item.Id != 0 ? Database.UpdateAsync(item) : Database.InsertAsync(item);
@@ -45,16 +44,24 @@ namespace Helper.Services
             return Database.DeleteAsync(item);
         }
 
+        public Task<List<Item>> GetItemsAsync()
+        {
+            return Database.Table<Item>().ToListAsync();
+        }
+
         public Task<List<Item>> GetItemsNotDoneAsync()
         {
             // SQL queries are also possible
-            //return Database.QueryAsync<Item>("SELECT * FROM [Items] WHERE [Done] = 0");
-            return Database.QueryAsync<Item>("SELECT * FROM [Items]");
+            return Database.QueryAsync<Item>("SELECT * FROM [Items] WHERE [Done] = 0");
+            //return Database.QueryAsync<Item>("SELECT * FROM [Items]");
         }
 
         private async Task InitializeAsync()
         {
-            if (initialized) return;
+            if (initialized)
+            {
+                return;
+            }
 
             await Database.CreateTablesAsync(CreateFlags.None, typeof(Item)).ConfigureAwait(false);
 
