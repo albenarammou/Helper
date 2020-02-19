@@ -1,14 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
 
 using Helper.Models;
-using Helper.Views;
 using Helper.ViewModels;
 
 namespace Helper.Views
@@ -32,11 +26,12 @@ namespace Helper.Views
             if (item == null)
                 return;
 
-            await Navigation.PushAsync(new ItemDetailPage(new ItemDetailViewModel(item)));
+            await Navigation.PushModalAsync(new ItemDetailPage(new ItemDetailViewModel(item)));
 
             // Manually deselect item.
             ItemsListView.SelectedItem = null;
         }
+
 
         async void AddItem_Clicked(object sender, EventArgs e)
         {

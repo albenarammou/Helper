@@ -23,10 +23,27 @@ namespace Helper.ViewModels
 
             MessagingCenter.Subscribe<NewItemPage, Item>(this, "AddItem", async (obj, item) =>
             {
-                var newItem = item as Item;
-                Items.Add(newItem);
+                var newItem = item as Item;                
                 await DataStore.SaveItemAsync(newItem);
+                LoadItemsCommand.Execute(null);
             });
+
+            MessagingCenter.Subscribe<ItemDetailPage, Item>(this, "AddItem", async (obj, Item) =>
+            {
+                Item newItem = Item as Item;
+                await DataStore.SaveItemAsync(newItem);
+                LoadItemsCommand.Execute(null);
+            });
+
+            MessagingCenter.Subscribe<ItemDetailPage, Item>(this, "DeleteItem", async (obj, Item) =>
+            {
+                Item currentItem = Item as Item;
+                Items.Remove(currentItem);
+                await DataStore.DeleteItemAsync(currentItem);
+
+            });
+
+
         }
 
         async Task ExecuteLoadItemsCommand()
@@ -39,7 +56,7 @@ namespace Helper.ViewModels
             try
             {
                 Items.Clear();
-                var items = await DataStore.GetItemsAsync();
+                var items = await DataStore.GetItemsAsync(); //Exeption!!!
                 foreach (var item in items)
                 {
                     Items.Add(item);

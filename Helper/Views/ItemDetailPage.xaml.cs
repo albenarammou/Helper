@@ -1,11 +1,8 @@
 ﻿using System;
 using System.ComponentModel;
 using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
-
 using Helper.Models;
 using Helper.ViewModels;
-using Helper.Services;
 
 namespace Helper.Views
 {
@@ -28,33 +25,22 @@ namespace Helper.Views
         async void Save_Clicked(object sender, EventArgs e)
         {
             MessagingCenter.Send(this, "AddItem", Item);
-            await Navigation.PopAsync();
+            //await Navigation.PopAsync();
+            await Navigation.PopModalAsync();
         }
         async void Delete_Clicked(object sender, EventArgs e)
         {
             MessagingCenter.Send(this, "DeleteItem", Item);
-            await Navigation.PopAsync();
-            //await Navigation.PushAsync(new NavigationPage(new NewItemPage()));
+            //await Navigation.PopAsync();
+            await Navigation.PopModalAsync();
         }
 
         async void Cancel_Clicked(object sender, EventArgs e)
         {
-            await Navigation.PopAsync();
+            //await Navigation.PopAsync();
+            await Navigation.PopModalAsync();
+
         }
-
-
-        public ItemDetailPage()
-        {
-            InitializeComponent();
-
-            var item = new Item
-            {
-                Text = "Item 1",
-                Description = "This is an item description."
-            };
-
-            viewModel = new ItemDetailViewModel(item);
-            BindingContext = viewModel;
-        }
+        
     }
 }
