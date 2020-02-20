@@ -8,13 +8,13 @@
     Title="{Binding Title}"
     mc:Ignorable="d">
 
-    <StackLayout Padding="15" Spacing="20">
-        <Label FontSize="Medium" Text="Text" />
+    <StackLayout Padding="10" Spacing="20">
+        <Label FontSize="Small" Text="Text" />
         <Entry
             d:Text="Item name"
             FontSize="Small"
             Text="{Binding Item.Text}" />
-        <Label FontSize="Medium" Text="Description" />
+        <Label FontSize="Small" Text="Description" />
         <Editor
             Margin="0"
             d:Text="Item description"
@@ -24,6 +24,34 @@
         <Button Clicked="Save_Clicked" Text="Save" />
         <Button Clicked="Delete_Clicked" Text="Delete" />
         <Button Clicked="Cancel_Clicked" Text="Cancel" />
+        <StackLayout
+            Margin="2,2,0,0"
+            HorizontalOptions="FillAndExpand"
+            Orientation="Horizontal">
+            <Button Clicked="PickUpPhoto_Clicked" Text="Pick up a photo" />
+            <Button
+                Clicked="TakePhoto_Clicked"
+                Text="Take a photo"
+                VerticalOptions="Start" />
+            <Button
+                Clicked="Upload_Clicked"
+                ImageSource="upload.png"
+                IsVisible="True"
+                VerticalOptions="Start" />
+            <Image
+                x:Name="FileImage"
+                HeightRequest="200"
+                WidthRequest="400" />
+        </StackLayout>
+        <StackLayout>
+            <Label
+                x:Name="Url"
+                FontSize="Small"
+                Text="Url " />
+        </StackLayout>
+
     </StackLayout>
+
+
 
 </ContentPage>

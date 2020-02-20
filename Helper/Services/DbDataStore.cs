@@ -5,29 +5,18 @@ using System.Text;
 using System.Threading.Tasks;
 using Helper.Models;
 using System.IO;
+using System.Linq;
 
 namespace Helper.Services
 {
     public class DbDataStore : IDataStore<Item>
     {
-        //public static string DatabasePath { get; set; }
 
         private SQLiteAsyncConnection Database;
         private static bool initialized = false;
-        public static string DatabasePath
-        {
-            get
-            {
-                var basePath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-                return Path.Combine(basePath, "Items");
-            }
-        }
         public DbDataStore()
         {
-            Database = new SQLiteAsyncConnection(DatabasePath,
-                SQLiteOpenFlags.Create |
-                SQLiteOpenFlags.SharedCache |
-                SQLiteOpenFlags.ReadWrite);
+            Database = new SQLiteAsyncConnection(Constants.DatabasePath, Constants.Flags);
             InitializeAsync().SafeFireAndForget(false);
         }
         public Task<Item> GetItemAsync(int id)
@@ -58,14 +47,14 @@ namespace Helper.Services
 
         private async Task InitializeAsync()
         {
-            if (initialized)
+            if (!initialized)
             {
-                return;
+                if (!Database.TableMappings.Any(m => m.MappedType.Name == typeof(Item).Name))
+                {
+                    await Database.CreateTablesAsync(CreateFlags.None, typeof(Item)).ConfigureAwait(false);
+                    initialized = true;
+                }
             }
-
-            await Database.CreateTablesAsync(CreateFlags.None, typeof(Item)).ConfigureAwait(false);
-
-            initialized = true;
         }
 
     }

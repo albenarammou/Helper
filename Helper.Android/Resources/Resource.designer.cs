@@ -5800,7 +5800,10 @@ namespace Helper.Droid
 			public const int tooltip_frame_light = 2131165303;
 			
 			// aapt resource value: 0x7F070078
-			public const int xamarin_logo = 2131165304;
+			public const int upload = 2131165304;
+			
+			// aapt resource value: 0x7F070079
+			public const int xamarin_logo = 2131165305;
 			
 			static Drawable()
 			{
