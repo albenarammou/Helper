@@ -5,6 +5,7 @@ using Helper.Models;
 using Helper.ViewModels;
 using Plugin.Media;
 using Plugin.Media.Abstractions;
+using System.Net.Http;
 
 namespace Helper.Views
 {
@@ -27,13 +28,11 @@ namespace Helper.Views
         async void Save_Clicked(object sender, EventArgs e)
         {
             MessagingCenter.Send(this, "AddItem", Item);
-            //await Navigation.PopAsync();
             await Navigation.PopModalAsync();
         }
         async void Delete_Clicked(object sender, EventArgs e)
         {
             MessagingCenter.Send(this, "DeleteItem", Item);
-            //await Navigation.PopAsync();
             await Navigation.PopModalAsync();
         }
 
@@ -57,11 +56,28 @@ namespace Helper.Views
         }
         async void TakePhoto_Clicked(object sender, EventArgs e)
         {
-            await Navigation.PopModalAsync();
+            await CrossMedia.Current.Initialize();
+            if (!CrossMedia.Current.IsCameraAvailable || !CrossMedia.Current.IsTakePhotoSupported)
+            {
+                await DisplayAlert("No Camera", ":(No camera available.", "OK");
+                return;
+            }
+            _mediaFile = await CrossMedia.Current.TakePhotoAsync( new StoreCameraMediaOptions { Directory = "Sample", Name="myImage.jpg"});
+            if (_mediaFile == null) return;
+            Url.Text = _mediaFile.Path;
+
+            FileImage.Source = ImageSource.FromStream(() => { return _mediaFile.GetStream(); });
         }
-        async void Upload_Clicked(object sender, EventArgs e)
+        private async void Upload_Clicked(object sender, EventArgs e)
         {
-            await Navigation.PopModalAsync();
+            var content = new MultipartFormDataContent();
+            content.Add(new StreamContent(_mediaFile.GetStream()),
+            "\"file\"",
+            $"\"{_mediaFile.Path}\"");
+            var httpClient = new HttpClient();
+            var uploadServiceBaseAddress = "http://uploadtoserver.xxxxxx";
+            var httpResponseMessage = await httpClient.PostAsync(uploadServiceBaseAddress, content);
+            Url.Text = await httpResponseMessage.Content.ReadAsStringAsync();
         }
 
     }
