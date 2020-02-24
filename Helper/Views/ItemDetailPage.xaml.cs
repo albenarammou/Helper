@@ -51,8 +51,7 @@ namespace Helper.Views
             _mediaFile = await CrossMedia.Current.PickPhotoAsync();
             if (_mediaFile == null) return;
             Url.Text = _mediaFile.Path;
-
-            FileImage.Source = ImageSource.FromStream(() => { return _mediaFile.GetStream(); });
+            FileImage.Source = ImageSource.FromFile(_mediaFile.Path);
         }
         async void TakePhoto_Clicked(object sender, EventArgs e)
         {
@@ -65,8 +64,8 @@ namespace Helper.Views
             _mediaFile = await CrossMedia.Current.TakePhotoAsync( new StoreCameraMediaOptions { Directory = "Sample", Name="myImage.jpg"});
             if (_mediaFile == null) return;
             Url.Text = _mediaFile.Path;
-
-            FileImage.Source = ImageSource.FromStream(() => { return _mediaFile.GetStream(); });
+            FileImage.Source = ImageSource.FromFile(_mediaFile.Path);
+            //FileImage.Source = ImageSource.FromStream(() => { return _mediaFile.GetStream(); });
         }
         private async void Upload_Clicked(object sender, EventArgs e)
         {
@@ -74,8 +73,9 @@ namespace Helper.Views
             content.Add(new StreamContent(_mediaFile.GetStream()),
             "\"file\"",
             $"\"{_mediaFile.Path}\"");
+
             var httpClient = new HttpClient();
-            var uploadServiceBaseAddress = "http://uploadtoserver.xxxxxx";
+            var uploadServiceBaseAddress = "https://192.168.0.37:5001/api/Files/Uploads";
             var httpResponseMessage = await httpClient.PostAsync(uploadServiceBaseAddress, content);
             Url.Text = await httpResponseMessage.Content.ReadAsStringAsync();
         }
